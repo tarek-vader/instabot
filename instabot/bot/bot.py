@@ -56,7 +56,7 @@ class Bot(object):
                  skipped_file='skipped.txt',
                  friends_file='friends.txt',
                  proxy=None,
-                 max_likes_per_day=1000,
+                 max_likes_per_day=900,
                  max_unlikes_per_day=1000,
                  max_follows_per_day=350,
                  max_unfollows_per_day=350,

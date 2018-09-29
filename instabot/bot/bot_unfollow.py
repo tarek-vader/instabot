@@ -23,6 +23,16 @@ def unfollow(self, user_id):
         self.logger.info("Out of unfollows for today.")
     return False
 
+def unfollow_non_followers_24(self, n_to_unfollows=None):
+    self.logger.info("Unfollowing non-followers 24.")
+    self.console_print(" ===> Start unfollowing non-followers 24 <===", 'red')
+    old_followed_user = self.followed_file.get_older_24()
+    
+    while (old_followed_user != None) :
+        user = old_followed_user[0]
+        user_date = old_followed_user[1]
+        self.unfollow(user)
+        self.followed_file.remove(user+";"+user_date)
 
 def unfollow_users(self, user_ids):
     broken_items = []

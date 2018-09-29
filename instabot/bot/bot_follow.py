@@ -1,7 +1,27 @@
 import time
 
 from tqdm import tqdm
+import datetime
 
+def follow_with_time(self, user_id):
+    user_id = self.convert_to_user_id(user_id)
+    msg = ' ===> Going to follow `user_id`: {}.'.format(user_id)
+    self.console_print(msg)
+    if not self.check_user(user_id):
+        return True
+    if not self.reached_limit('follows'):
+        self.delay('follow')
+        if self.api.follow(user_id):
+            msg = '===> FOLLOWED <==== `user_id`: {}.'.format(user_id)
+            self.console_print(msg, 'green')
+            self.total['follows'] += 1
+            self.followed_file.append(user_id + ";" + datetime.datetime.now().ctime())
+            if user_id not in self._following:
+                self._following.append(user_id)
+            return True
+    else:
+        self.logger.info("Out of follows for today.")
+    return False
 
 def follow(self, user_id):
     user_id = self.convert_to_user_id(user_id)
@@ -40,7 +60,7 @@ def follow_users(self, user_ids):
     msg = msg.format(skipped.fname, len(user_ids))
     self.console_print(msg, 'green')
     for user_id in tqdm(user_ids, desc='Processed users'):
-        if not self.follow(user_id):
+        if not self.follow_with_time(user_id):
             if self.api.last_response.status_code == 404:
                 self.console_print("404 error user {user_id} doesn't exist.", 'red')
                 broken_items.append(user_id)
@@ -52,7 +72,7 @@ def follow_users(self, user_ids):
                 error_pass = False
                 for _ in range(try_number):
                     time.sleep(60)
-                    error_pass = self.follow(user_id)
+                    error_pass = self.follow_with_time(user_id)
                     if error_pass:
                         break
                 if not error_pass:
@@ -63,6 +83,8 @@ def follow_users(self, user_ids):
 
     self.logger.info("DONE: Now following {} users in total.".format(self.total['follows']))
     return broken_items
+
+
 
 
 def follow_followers(self, user_id, nfollows=None):

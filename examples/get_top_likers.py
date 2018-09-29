@@ -30,6 +30,7 @@ bot.login(username=args.u, password=args.p,
 
 
 f = utils.file(args.filename)
+f2 =utils.file("all"+args.filename)
 
 #python get_top_likers.py likers.txt mister.da.vinci
 numberOfMedia = 10
@@ -43,21 +44,22 @@ for username in args.users:
                 likersUserName.append(liker) #bot.get_username_from_user_id(liker)
 
         topLikers = []
-        topLikerDic = {i: likersUserName.count(i) for i in likersUserName}
-        numberOfLikes = numberOfMedia
+        topLikerDic = {liker: likersUserName.count(liker) for liker in likersUserName} # {liker, numberofLikes}
+        numberOfLikes = numberOfMedia # from 10 to 1
         while(numberOfLikes > 1):
             for liker in topLikerDic.keys():
                 if(topLikerDic[liker] >= numberOfLikes):
-                    completeLiker = liker + ":" + str(topLikerDic[liker])
+                    completeLiker = liker + ":" + str(topLikerDic[liker])  # liker:numberofLikes
                     if(completeLiker not in topLikers):
                         topLikers.append(completeLiker)
             numberOfLikes = numberOfLikes - 1
-            if(len(topLikers) > 10):
-                break
+#            if(len(topLikers) > 10):
+#                break
         usernameList = []
         for liker in topLikers:
             usernameList.append(bot.get_username_from_user_id(liker.split(':')[0]))
         f.save_list(usernameList)
+        f2.save_list(topLikers)
 #         for liker in tqdm(likers):
 #             bot.like_user(liker, amount=2)
 #             bot.follow(liker)
