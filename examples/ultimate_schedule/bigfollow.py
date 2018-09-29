@@ -36,8 +36,8 @@ for item in like_hashtags_list:
 ran = random.randint(40, 60)
 for item in like_users_list:
     tasks_list.append((bot.like_user, {'user_id': item, 'amount': ran}))
-tasks_list.append(bot.unfollow_non_followers_24,{None})
-
+tasks_list.append((bot.unfollow_non_followers_24,{None}))
+                      
 # shuffle(tasks_list)
 for func, arg in tasks_list:
     func(**arg)
