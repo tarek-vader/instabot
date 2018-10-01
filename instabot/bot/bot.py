@@ -40,7 +40,7 @@ from .bot_stats import save_user_stats
 from .bot_support import (check_if_file_exists, console_print, extract_urls,
                           read_list_from_file)
 from .bot_unfollow import (unfollow, unfollow_everyone, unfollow_non_followers,
-                           unfollow_users)
+                           unfollow_users,unfollow_non_followers_24)u
 from .bot_unlike import (unlike, unlike_comment, unlike_media_comments,
                          unlike_medias, unlike_user)
 from .bot_video import upload_video
@@ -491,6 +491,9 @@ class Bot(object):
 
     def unfollow_everyone(self):
         return unfollow_everyone(self)
+    
+    def unfollow_non_followers_24(self):
+        reutrn unfollow_non_followers_24(self)
 
     # direct
 

@@ -12,6 +12,7 @@
 import os
 import sys
 import random
+import time
 sys.path.append(os.path.join(sys.path[0], '../../'))
 from instabot import Bot
 
@@ -36,8 +37,9 @@ for item in like_hashtags_list:
 ran = random.randint(40, 60)
 for item in like_users_list:
     tasks_list.append((bot.like_user, {'user_id': item, 'amount': ran}))
-tasks_list.append((bot.unfollow_non_followers_24,{None}))
+tasks_list.append((bot.unfollow_non_followers_24,{'n_to_unfollows':None}))
                       
 # shuffle(tasks_list)
 for func, arg in tasks_list:
     func(**arg)
+    time.sleep(random.randint(40, 60))
