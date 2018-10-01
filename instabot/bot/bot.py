@@ -493,7 +493,7 @@ class Bot(object):
         return unfollow_everyone(self)
     
     def unfollow_non_followers_24(self):
-        reutrn unfollow_non_followers_24(self)
+        return unfollow_non_followers_24(self)
 
     # direct
 
