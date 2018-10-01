@@ -20,7 +20,7 @@ bot = Bot()
 bot.login()
 
 print("Current script's schedule:")
-follow_followers_list = bot.read_list_from_file("username_databases.txt")
+follow_followers_list = bot.read_list_from_file("username_database.txt")
 print("Going to follow followers of:", follow_followers_list)
 like_hashtags_list = bot.read_list_from_file("hashtag_database.txt")
 print("Going to like hashtags:", like_hashtags_list)
