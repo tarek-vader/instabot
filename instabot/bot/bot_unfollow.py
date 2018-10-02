@@ -33,6 +33,7 @@ def unfollow_non_followers_24(self, n_to_unfollows=None):
         user_date = old_followed_user[1]
         self.unfollow(user)
         self.followed_file.remove(user+";"+user_date)
+        old_followed_user = self.followed_file.get_older_24()
 
 def unfollow_users(self, user_ids):
     broken_items = []

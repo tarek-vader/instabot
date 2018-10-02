@@ -23,9 +23,9 @@ print("Current script's schedule:")
 follow_followers_list = bot.read_list_from_file("username_database.txt")
 print("Going to follow followers of:", follow_followers_list)
 like_hashtags_list = bot.read_list_from_file("hashtag_database.txt")
-print("Going to like hashtags:", like_hashtags_list)
+#print("Going to like hashtags:", like_hashtags_list)
 like_users_list = bot.read_list_from_file("username_database.txt")
-print("Going to like users:", like_users_list)
+#print("Going to like users:", like_users_list)
 
 tasks_list = []
 ran = random.randint(40, 60)
@@ -39,7 +39,7 @@ for item in like_users_list:
     tasks_list.append((bot.like_user, {'user_id': item, 'amount': ran}))
 tasks_list.append((bot.unfollow_non_followers_24,{'n_to_unfollows':None}))
                       
-# shuffle(tasks_list)
+random.shuffle(tasks_list)
 for func, arg in tasks_list:
     func(**arg)
     time.sleep(random.randint(40, 60))

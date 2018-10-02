@@ -17,7 +17,7 @@ from .bot_direct import (send_hashtag, send_like, send_media, send_medias,
                          send_message, send_messages, send_profile)
 from .bot_filter import check_media, check_not_bot, check_user, filter_medias
 from .bot_follow import (follow, follow_followers, follow_following,
-                         follow_users)
+                         follow_users, follow_with_time)
 from .bot_get import (convert_to_user_id, get_archived_medias, get_comment,
                       get_comment_likers, get_geotag_medias, get_geotag_users,
                       get_hashtag_medias, get_hashtag_users,
@@ -465,7 +465,9 @@ class Bot(object):
         return upload_video(self, video, thumbnail, caption)
 
     # follow
-
+    def follow_with_time(self, user_id):
+        return follow_with_time(self, user_id)
+    
     def follow(self, user_id):
         return follow(self, user_id)
 
@@ -492,8 +494,8 @@ class Bot(object):
     def unfollow_everyone(self):
         return unfollow_everyone(self)
     
-    def unfollow_non_followers_24(self):
-        return unfollow_non_followers_24(self)
+    def unfollow_non_followers_24(self, n_to_unfollows=None):
+        return unfollow_non_followers_24(self, n_to_unfollows)
 
     # direct
 
