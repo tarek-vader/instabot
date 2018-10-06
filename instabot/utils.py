@@ -2,6 +2,7 @@
 import random
 from collections import OrderedDict
 import datetime
+import codecs
 
 from huepy import bold, green, orange
 
@@ -10,11 +11,12 @@ class file(object):
     def __init__(self, fname, verbose=True):
         self.fname = fname
         self.verbose = verbose
-        open(self.fname, 'a').close()
+        codecs.open(self.fname, 'a' ,encoding='utf-8').close()
+        #open(self.fname, 'a').close()
 
     @property
     def list(self):
-        with open(self.fname, 'r') as f:
+        with codecs.open(self.fname, 'r' ,encoding='utf-8') as f:
             lines = [x.strip('\n') for x in f.readlines()]
             return [x for x in lines if x]
 

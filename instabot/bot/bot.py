@@ -79,8 +79,8 @@ class Bot(object):
                  max_following_to_block=2000,
                  like_delay=10,
                  unlike_delay=10,
-                 follow_delay=30,
-                 unfollow_delay=30,
+                 follow_delay=60,
+                 unfollow_delay=60,
                  comment_delay=60,
                  block_delay=30,
                  unblock_delay=30,
@@ -257,7 +257,7 @@ class Bot(object):
         elapsed_time = time.time() - last_action
         if elapsed_time < target_delay:
             t_remaining = target_delay - elapsed_time
-            time.sleep(t_remaining * random.uniform(0.25, 1.25))
+            time.sleep(t_remaining * random.uniform(0.8, 1.3))
         self.last[key] = time.time()
 
     def error_delay(self):

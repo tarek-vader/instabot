@@ -2,6 +2,8 @@ import time
 
 from tqdm import tqdm
 import datetime
+import random
+import time
 
 def follow_with_time(self, user_id):
     user_id = self.convert_to_user_id(user_id)
@@ -24,6 +26,7 @@ def follow_with_time(self, user_id):
     return False
 
 def follow(self, user_id):
+    user_id = user_id.trim()
     user_id = self.convert_to_user_id(user_id)
     msg = ' ===> Going to follow `user_id`: {}.'.format(user_id)
     self.console_print(msg)
