@@ -41,10 +41,11 @@ def like_timeline():
     bot.like_timeline(amount=300 // 24)
 
 def like_and_follow():
-    for i in range(0,300):
-        user_id= topLiker_file.random().strip()
+    for user in topLiker_file.list[0:400]:
+        user_id= user.strip()
         bot.follow_with_time(user_id)
         bot.like_user(user_id, amount=2, filtration=False)
+        topLiker_file.remove(user)
 
 def like_followers_from_random_user_file():
     bot.like_followers(random_user_file.random().strip(), nlikes=3)
@@ -128,12 +129,12 @@ schedule.every(6).hours.do(run_threaded, stats)
 schedule.every(8).hours.do(run_threaded, like_hashtags)
 #schedule.every(2).hours.do(run_threaded, like_timeline)
 
-schedule.every(1).days.at("03:00").do(run_threaded, follow_followers)
+#schedule.every(1).days.at("03:00").do(run_threaded, follow_followers)
 #schedule.every(16).hours.do(run_threaded, comment_medias)
 schedule.every(1).days.at("08:00").do(run_threaded, unfollow_non_followers)
 schedule.every(1).days.at("19:13").do(run_threaded, like_and_follow)
-schedule.every(12).hours.do(run_threaded, follow_users_from_hastag_file)
-schedule.every(6).hours.do(run_threaded, comment_hashtag)
+#schedule.every(12).hours.do(run_threaded, follow_users_from_hastag_file)
+#schedule.every(6).hours.do(run_threaded, comment_hashtag)
 #schedule.every(1).days.at("21:28").do(run_threaded, upload_pictures)
 schedule.every(4).days.at("07:50").do(run_threaded, put_non_followers_on_blacklist)
 
