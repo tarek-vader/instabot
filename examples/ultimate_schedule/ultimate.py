@@ -19,6 +19,7 @@ bot = Bot(comments_file=config.COMMENTS_FILE,
 bot.login()
 bot.logger.info("ULTIMATE script. Safe to run 24/7!")
 
+topLiker_file = utils.file(config.TOPLIKER_FILE)
 random_user_file = utils.file(config.USERS_FILE)
 random_hashtag_file = utils.file(config.HASHTAGS_FILE)
 photo_captions_file = utils.file(config.PHOTO_CAPTIONS_FILE)
@@ -33,19 +34,24 @@ def stats():
 
 
 def like_hashtags():
-    bot.like_hashtag(random_hashtag_file.random(), amount=700 // 24)
+    bot.like_hashtag(random_hashtag_file.random().strip(), amount=700 // 24)
 
 
 def like_timeline():
     bot.like_timeline(amount=300 // 24)
 
+def like_and_follow():
+    for i in range(0,300):
+        user_id= topLiker_file.random().strip()
+        bot.follow_with_time(user_id)
+        bot.like_user(user_id, amount=2, filtration=False)
 
 def like_followers_from_random_user_file():
-    bot.like_followers(random_user_file.random(), nlikes=3)
+    bot.like_followers(random_user_file.random().strip(), nlikes=3)
 
 
 def follow_followers():
-    bot.follow_followers(random_user_file.random(), nfollows=config.NUMBER_OF_FOLLOWERS_TO_FOLLOW)
+    bot.follow_followers(random_user_file.random().strip(), nfollows=config.NUMBER_OF_FOLLOWERS_TO_FOLLOW)
 
 
 def comment_medias():
@@ -57,11 +63,11 @@ def unfollow_non_followers():
 
 
 def follow_users_from_hastag_file():
-    bot.follow_users(bot.get_hashtag_users(random_hashtag_file.random()))
+    bot.follow_users(bot.get_hashtag_users(random_hashtag_file.random().strip()))
 
 
 def comment_hashtag():
-    hashtag = random_hashtag_file.random()
+    hashtag = random_hashtag_file.random().strip()
     bot.logger.info("Commenting on hashtag: " + hashtag)
     bot.comment_hashtag(hashtag)
 
@@ -122,10 +128,10 @@ schedule.every(6).hours.do(run_threaded, stats)
 schedule.every(8).hours.do(run_threaded, like_hashtags)
 #schedule.every(2).hours.do(run_threaded, like_timeline)
 
-schedule.every(1).days.at("23:28").do(run_threaded, follow_followers)
+schedule.every(1).days.at("03:00").do(run_threaded, follow_followers)
 #schedule.every(16).hours.do(run_threaded, comment_medias)
 schedule.every(1).days.at("08:00").do(run_threaded, unfollow_non_followers)
-schedule.every(1).days.at("04:04").do(run_threaded, like_followers_from_random_user_file)
+schedule.every(1).days.at("19:13").do(run_threaded, like_and_follow)
 schedule.every(12).hours.do(run_threaded, follow_users_from_hastag_file)
 schedule.every(6).hours.do(run_threaded, comment_hashtag)
 #schedule.every(1).days.at("21:28").do(run_threaded, upload_pictures)

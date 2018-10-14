@@ -179,7 +179,9 @@ def get_user_info(self, user_id, use_cache=True):
 
 
 def get_user_followers(self, user_id, nfollows):
+    user_id = user_id.strip()
     user_id = self.convert_to_user_id(user_id)
+    print(str(user_id))
     followers = self.api.get_total_followers(user_id, nfollows)
     return [str(item['pk']) for item in followers][::-1] if followers else []
 

@@ -15,6 +15,7 @@ HASHTAGS_FILE = "hashtag_database.txt"
 # photos and follow users using the hashtags in this file
 
 USERS_FILE = "username_database.txt"
+TOPLIKER_FILE = "allLikers.txt"
 # Same as HASHTAGS_FILE, but with users. The bot will follow those users'
 # followers and like their posts
 
@@ -37,7 +38,7 @@ FOLLOW_MESSAGE = "Follow @my_account for the best photos!"
 # [random caption taken from PHOTO_CAPTIONS]
 # FOLLOW_MESSAGE
 
-NUMBER_OF_FOLLOWERS_TO_FOLLOW = 500
+NUMBER_OF_FOLLOWERS_TO_FOLLOW = 300
 # Specifies the number of people to follow each time the function
 # bot.follow_followers gets executed. By default, this function gets
 # executed by the bot every 2 days at 11:00.

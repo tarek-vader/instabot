@@ -26,7 +26,7 @@ def follow_with_time(self, user_id):
     return False
 
 def follow(self, user_id):
-    user_id = user_id.trim()
+    user_id = user_id.strip()
     user_id = self.convert_to_user_id(user_id)
     msg = ' ===> Going to follow `user_id`: {}.'.format(user_id)
     self.console_print(msg)
