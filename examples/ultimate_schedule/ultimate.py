@@ -42,7 +42,7 @@ def like_timeline():
 
 def like_and_follow():
     for i in range(0,300):
-        user_id= topLiker_file.random().strip()
+        user_id= topLiker_file.list.strip()
         bot.follow_with_time(user_id)
         bot.like_user(user_id, amount=2, filtration=False)
 
@@ -123,7 +123,10 @@ def run_threaded(job_fn):
     job_thread = threading.Thread(target=job_fn)
     job_thread.start()
 
-#schedule.every(1).days.at("01:44").do(run_threaded, comment_hashtag)
+ follow_users_from_hastag_file)
+schedule.every(6).hours.do(run_threaded, comment_hashtag)
+#schedule.every(1).days.at("21:28").do(run_threaded, upload_pictures)
+schedule.every(4).days.at("07:50").do(run_threaded, put_non_followers_on_blacklist)#schedule.every(1).days.at("01:44").do(run_threaded, comment_hashtag)
 schedule.every(6).hours.do(run_threaded, stats)
 schedule.every(8).hours.do(run_threaded, like_hashtags)
 #schedule.every(2).hours.do(run_threaded, like_timeline)
