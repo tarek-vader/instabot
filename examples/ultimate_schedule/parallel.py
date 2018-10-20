@@ -159,7 +159,7 @@ stats_thread = threading.Thread(name='stats', target=stats)
 
 like_follow_thread.start()
 unfollow_thread.start()
-like_hashtags_thread.start()
+#like_hashtags_thread.start()
 stats_thread.start()
 
 
