@@ -58,8 +58,8 @@ class Bot(object):
                  proxy=None,
                  max_likes_per_day=900,
                  max_unlikes_per_day=1000,
-                 max_follows_per_day=350,
-                 max_unfollows_per_day=350,
+                 max_follows_per_day=500,
+                 max_unfollows_per_day=550,
                  max_comments_per_day=100,
                  max_blocks_per_day=100,
                  max_unblocks_per_day=100,
@@ -617,3 +617,6 @@ class Bot(object):
 
     def save_user_stats(self, username, path=""):
         return save_user_stats(self, username, path=path)
+    
+    def get_top_likers(self, users):
+        return get_top_likers(self, users)

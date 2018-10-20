@@ -17,7 +17,11 @@ def follow_with_time(self, user_id):
             msg = '===> FOLLOWED <==== `user_id`: {}.'.format(user_id)
             self.console_print(msg, 'green')
             self.total['follows'] += 1
-            self.followed_file.append(user_id + ";" + datetime.datetime.now().ctime())
+            self.follow_lock.aquire()
+            try:
+                self.followed_file.append(user_id + ";" + datetime.datetime.now().ctime())
+            finally:
+                self.follow_lock.release()
             if user_id not in self._following:
                 self._following.append(user_id)
             return True

@@ -73,6 +73,11 @@ class file(object):
     def remove_duplicates(self):
         return list(OrderedDict.fromkeys(self.list))
 
+    def append_list(self, items):
+        with open(self.fname, 'a') as f:
+            for item in items:
+                f.write('{item}\n'.format(item=item))
+                
     def save_list(self, items):
         with open(self.fname, 'w') as f:
             for item in items:
