@@ -17,7 +17,7 @@ def follow_with_time(self, user_id):
             msg = '===> FOLLOWED <==== `user_id`: {}.'.format(user_id)
             self.console_print(msg, 'green')
             self.total['follows'] += 1
-            self.follow_lock.aquire()
+            self.follow_lock.acquire()
             try:
                 self.followed_file.append(user_id + ";" + datetime.datetime.now().ctime())
             finally:

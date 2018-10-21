@@ -16,7 +16,7 @@ class file(object):
 
     @property
     def list(self):
-        with codecs.open(self.fname, 'r' ,encoding='utf-8') as f:
+        with open(self.fname, 'r') as f:
             lines = [x.strip('\n') for x in f.readlines()]
             return [x for x in lines if x]
 
@@ -52,6 +52,9 @@ class file(object):
             msg = "Removing '{}' from `{}`.".format(x, self.fname)
             print(bold(green(msg)))
             self.save_list(items)
+        else:
+            msg = "while removing not found '{}' .".format(x)
+            print(bold(red(msg)))
 
     def get_older_24(self):
         items = self.list
@@ -73,11 +76,6 @@ class file(object):
     def remove_duplicates(self):
         return list(OrderedDict.fromkeys(self.list))
 
-    def append_list(self, items):
-        with open(self.fname, 'a') as f:
-            for item in items:
-                f.write('{item}\n'.format(item=item))
-                
     def save_list(self, items):
         with open(self.fname, 'w') as f:
             for item in items:

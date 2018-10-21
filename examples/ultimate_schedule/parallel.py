@@ -2,6 +2,7 @@
 
 from glob import glob
 import os
+import random
 import sys
 import threading
 import time
@@ -34,7 +35,7 @@ bot.topLiker_lock = threading.Lock()
 bot.follow_lock = threading.Lock()
 
 def stats():
-    while(true):
+    while(True):
         bot.save_user_stats(bot.user_id)
         time.sleep(60*60*6)
 
@@ -47,20 +48,20 @@ def like_timeline():
     bot.like_timeline(amount=300 // 24)
 
 def like_and_follow():
-    while(true):
+    while(True):
         for user in topLiker_file.list[0:100]:
             user_id= user.strip()
             bot.follow_with_time(user_id)
             bot.like_user(user_id, amount=2, filtration=False)
-            self.topLiker_lock.acquire()
+            bot.topLiker_lock.acquire()
             try:
-                topLiker_file.remove(user)
+                topLiker_file.remove(user_id)
             finally:
-                self.topLiker_lock.release()
+                bot.topLiker_lock.release()
         time.sleep(60)
 
 def collect_topLiker():
-    while(true):
+    while(True):
         for hashtag in random_hashtag_file.list:
             hastagusers = bot.get_hashtag_users(hashtag.strip())
             for user in hashtagusers[0:10]:
@@ -69,8 +70,8 @@ def collect_topLiker():
                 try:
                     topLiker_file.append_list(topLikers)
                 finally:
-                    self.topLiker_lock.release()
-                while len(topLiker_file.list) > 500:
+                    bot.topLiker_lock.release()
+                while len(topLiker_file.list) > 1000:
                     time.sleep(60*15) # 15 min
                     
                 
@@ -88,9 +89,10 @@ def comment_medias():
 
 
 def unfollow_non_followers():
-    while(true):
+    while(True):
         bot.unfollow_non_followers_24(n_to_unfollows=config.NUMBER_OF_NON_FOLLOWERS_TO_UNFOLLOW)
-        time.sleep(60)
+        time2Sleep = random.randint(50, 80)
+        time.sleep(time2Sleep)
 
 
 def follow_users_from_hastag_file():
@@ -163,6 +165,6 @@ unfollow_thread.start()
 stats_thread.start()
 
 
-while True:
-    schedule.run_pending()
-    time.sleep(1)
+#while True:
+#    schedule.run_pending()
+#    time.sleep(1)
