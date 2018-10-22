@@ -33,7 +33,7 @@ def unfollow_non_followers_24(self, n_to_unfollows=None):
         user = old_followed_user[0]
         user_date = old_followed_user[1]
         self.unfollow(user)
-        self.follow_lock.aquire()
+        self.follow_lock.acquire()
         try:
             self.followed_file.remove(user+";"+user_date)
         finally:
