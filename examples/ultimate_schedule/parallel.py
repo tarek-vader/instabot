@@ -67,7 +67,7 @@ def collect_topLiker():
         for hashtag in random_hashtag_file.list:
             hastagusers = bot.get_hashtag_users(hashtag.strip())
             for user in hastagusers[0:10]:
-                topLikers = bot.get_top_likers(user)
+                topLikers = bot.get_top_Likers(user)
                 bot.topLiker_lock.acquire()
                 try:
                     topLiker_file.append_list(topLikers)
