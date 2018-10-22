@@ -25,7 +25,7 @@ def unfollow(self, user_id):
     return False
 
 def unfollow_non_followers_24(self, n_to_unfollows=None):
-    self.logger.info("Unfollowing non-followers 24.")
+    #self.logger.info("Unfollowing non-followers 24.")
     old_followed_user = self.followed_file.get_older_24()
     
     if old_followed_user != None :

@@ -22,7 +22,7 @@ TOPLIKER_FILE = "allLikers.txt"
 POSTED_PICS_FILE = "pics.txt"
 # The file containing all the photos already posted from the PICS_PATH directory
 
-PICS_PATH = "/Path/to/pics/folder/"
+PICS_PATH = "/home/pi/Pictures/"
 # The path of the directory containing the photos the bot will upload
 # NOTE: Being a directory, it must end with '/'
 

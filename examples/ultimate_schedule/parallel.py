@@ -24,11 +24,6 @@ bot.logger.info("ULTIMATE script. Safe to run 24/7!")
 topLiker_file = utils.file(config.TOPLIKER_FILE)
 random_user_file = utils.file(config.USERS_FILE)
 random_hashtag_file = utils.file(config.HASHTAGS_FILE)
-photo_captions_file = utils.file(config.PHOTO_CAPTIONS_FILE)
-posted_pic_list = utils.file(config.POSTED_PICS_FILE).list
-
-pics = sorted([os.path.basename(x) for x in
-               glob(config.PICS_PATH + "/*.jpg")])
 
 
 bot.topLiker_lock = threading.Lock()
@@ -96,8 +91,6 @@ def unfollow_non_followers():
         bot.unfollow_non_followers_24(n_to_unfollows=config.NUMBER_OF_NON_FOLLOWERS_TO_UNFOLLOW)
         while(bot.reached_limit('unfollows')):
             time.sleep(60)
-        time2Sleep = random.randint(50, 80)
-        time.sleep(time2Sleep)
 
 
 def follow_users_from_hastag_file():
@@ -109,8 +102,22 @@ def comment_hashtag():
     bot.logger.info("Commenting on hashtag: " + hashtag)
     bot.comment_hashtag(hashtag)
 
-
+def pictures_job():
+    while(True):
+        upload_pictures()
+        i=6
+        while(i>=0):
+            bot.console_print("uploading pictures will begin in" +str(i) +" hours", 'yellow')
+            time.sleep(60*60)  # one hour
+            i=i-1
+            
+        
 def upload_pictures():  # Automatically post a pic in 'pics' folder
+    photo_captions_file = utils.file(config.PHOTO_CAPTIONS_FILE)
+    posted_pic_list = utils.file(config.POSTED_PICS_FILE).list
+    pics = sorted([os.path.basename(x) for x in
+               glob(config.PICS_PATH + "/*.jpg")])
+
     try:
         for pic in pics:
             if pic in posted_pic_list:
@@ -162,6 +169,7 @@ topLiker_thread =  threading.Thread(name='get_top_liker', target=collect_topLike
 unfollow_thread = threading.Thread(name='unfollow_non_followers', target=unfollow_non_followers)
 like_hashtags_thread = threading.Thread(name='like_hashtags', target=like_hashtags)
 stats_thread = threading.Thread(name='stats', target=stats)
+pics_thread = threading.Thread(name='pictures', target=pictures_job)
 
 
 like_follow_thread.start()
