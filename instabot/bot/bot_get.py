@@ -4,7 +4,8 @@
 """
 
 from tqdm import tqdm
-
+import random
+import time
 
 def get_media_owner(self, media_id):
     self.api.media_info(media_id)
@@ -142,6 +143,34 @@ def get_hashtag_users(self, hashtag):
         return []
     return [str(i['user']['pk']) for i in self.api.last_json['items']]
 
+
+def get_top_Likers(self, usersList):
+    numberOfMedia = 10
+    topLikers = []
+    for username in usersList:
+        msg = '===> geting likers from, `user_id`: {}'
+        self.console_print(msg.format(username), 'green')
+        medias = self.get_last_user_medias(username, numberOfMedia)
+        likersUserName = []
+        if len(medias):
+            for media in medias:
+                likers = self.get_media_likers(media)
+                for liker in likers:
+                    likersUserName.append(liker) #bot.get_username_from_user_id(liker)
+                time2Sleep = random.randint(5, 15)
+                time.sleep(time2Sleep)
+            topLikerDic = {liker: likersUserName.count(liker) for liker in likersUserName} # {liker, numberofLikes}
+            numberOfLikes = numberOfMedia # from 10 to 1
+            while(numberOfLikes > 5):
+                for liker in topLikerDic.keys():
+                    if(topLikerDic[liker] >= numberOfLikes):
+                        completeLiker = liker + ":" + str(topLikerDic[liker])  # liker:numberofLikes
+                        if(completeLiker not in topLikers):
+                            topLikers.append(completeLiker)
+                numberOfLikes = numberOfLikes - 1
+            time2Sleep = random.randint(60, 80)
+            time.sleep(time2Sleep)
+    return topLikers
 
 def get_geotag_users(self, geotag):
     # TODO: returns list user_ids who just posted on this geotag

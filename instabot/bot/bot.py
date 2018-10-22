@@ -31,7 +31,7 @@ from .bot_get import (convert_to_user_id, get_archived_medias, get_comment,
                       get_user_followers, get_user_following,
                       get_user_id_from_username, get_user_info,
                       get_user_likers, get_user_medias, get_user_tags_medias,
-                      get_username_from_user_id, get_your_medias, search_users)
+                      get_username_from_user_id, get_your_medias, search_users, get_top_likers)
 from .bot_like import (like, like_comment, like_followers, like_following,
                        like_geotag, like_hashtag, like_media_comments,
                        like_medias, like_timeline, like_user, like_users)
@@ -56,10 +56,10 @@ class Bot(object):
                  skipped_file='skipped.txt',
                  friends_file='friends.txt',
                  proxy=None,
-                 max_likes_per_day=900,
+                 max_likes_per_day=1000,
                  max_unlikes_per_day=1000,
-                 max_follows_per_day=500,
-                 max_unfollows_per_day=550,
+                 max_follows_per_day=700,
+                 max_unfollows_per_day=1000,
                  max_comments_per_day=100,
                  max_blocks_per_day=100,
                  max_unblocks_per_day=100,
@@ -79,7 +79,7 @@ class Bot(object):
                  max_following_to_block=2000,
                  like_delay=10,
                  unlike_delay=10,
-                 follow_delay=60,
+                 follow_delay=65,
                  unfollow_delay=60,
                  comment_delay=60,
                  block_delay=30,
@@ -338,6 +338,9 @@ class Bot(object):
 
     def get_hashtag_users(self, hashtag):
         return get_hashtag_users(self, hashtag)
+    
+    def get_top_likers(self, user):
+        return get_top_likers(self, user)
 
     def get_geotag_users(self, geotag):
         return get_geotag_users(self, geotag)

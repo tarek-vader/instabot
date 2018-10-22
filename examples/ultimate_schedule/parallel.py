@@ -50,9 +50,11 @@ def like_timeline():
 def like_and_follow():
     while(True):
         for user in topLiker_file.list[0:100]:
+            while( bot.reached_limit('follows')):
+                time.sleep(60)
             user_id= user.strip()
-            bot.follow_with_time(user_id)
-            bot.like_user(user_id, amount=2, filtration=False)
+            if not bot.follow_with_time(user_id):
+                bot.like_user(user_id, amount=2, filtration=False)
             bot.topLiker_lock.acquire()
             try:
                 topLiker_file.remove(user_id)
@@ -64,14 +66,15 @@ def collect_topLiker():
     while(True):
         for hashtag in random_hashtag_file.list:
             hastagusers = bot.get_hashtag_users(hashtag.strip())
-            for user in hashtagusers[0:10]:
-                topLikers = get_top_likers(user)
+            for user in hastagusers[0:10]:
+                topLikers = bot.get_top_likers(user)
                 bot.topLiker_lock.acquire()
                 try:
                     topLiker_file.append_list(topLikers)
                 finally:
                     bot.topLiker_lock.release()
                 while len(topLiker_file.list) > 1000:
+                    bot.console_print("collect_topLiker is sleeping", 'yellow')
                     time.sleep(60*15) # 15 min
                     
                 
@@ -91,6 +94,8 @@ def comment_medias():
 def unfollow_non_followers():
     while(True):
         bot.unfollow_non_followers_24(n_to_unfollows=config.NUMBER_OF_NON_FOLLOWERS_TO_UNFOLLOW)
+        while(bot.reached_limit('unfollows')):
+            time.sleep(60)
         time2Sleep = random.randint(50, 80)
         time.sleep(time2Sleep)
 

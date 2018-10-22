@@ -66,8 +66,6 @@ class file(object):
                 msg = "found user '{}' followed at `{}`.".format(user_date.split(';')[0], fulldate)
                 print(bold(green(msg)))
                 return user_date.split(';')[0], user_date.split(';')[1]
-        msg = "didnt find any user"
-        print(orange(msg))
         return None
 
     def random(self):

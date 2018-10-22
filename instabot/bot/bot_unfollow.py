@@ -26,10 +26,10 @@ def unfollow(self, user_id):
 
 def unfollow_non_followers_24(self, n_to_unfollows=None):
     self.logger.info("Unfollowing non-followers 24.")
-    self.console_print(" ===> Start unfollowing non-followers 24 <===", 'red')
     old_followed_user = self.followed_file.get_older_24()
     
     if old_followed_user != None :
+        self.console_print(" ===> Start unfollowing non-followers 24 <===", 'red')
         user = old_followed_user[0]
         user_date = old_followed_user[1]
         self.unfollow(user)

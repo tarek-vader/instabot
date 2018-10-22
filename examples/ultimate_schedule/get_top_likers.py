@@ -11,17 +11,18 @@ import sys
 
 
 from tqdm import tqdm
+import time
+import random
 
 sys.path.append(os.path.join(sys.path[0], '../'))
 sys.path.append(os.path.join(sys.path[0], '../../'))
 from instabot import Bot, utils
 
 
-def get_top_Likers(usersList):
+def get_top_Likers(bot, usersList):
     numberOfMedia = 10
     topLikers = []
     for username in usersList:
-        f2 =utils.file(outputDir +'\\' +username+ r'.txt')
         print ("geting likers from " +username)
         medias = bot.get_last_user_medias(username, numberOfMedia)
         likersUserName = []
