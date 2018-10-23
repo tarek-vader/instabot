@@ -13,7 +13,7 @@ def unfollow(self, user_id):
     if not self.reached_limit('unfollows'):
         self.delay('unfollow')
         if self.api.unfollow(user_id):
-            msg = '===> Unfollowed, `user_id`: {}, user_name: {}'
+            msg = '===> Unfollowed, `user_id`: {}'
             self.console_print(msg.format(user_id), 'yellow')
             self.unfollowed_file.append(user_id)
             self.total['unfollows'] += 1
