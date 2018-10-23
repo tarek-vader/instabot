@@ -32,7 +32,7 @@ bot.follow_lock = threading.Lock()
 def stats():
     while(True):
         bot.save_user_stats(bot.user_id)
-        time.sleep(60*60*6)
+        time.sleep(60*60*3)
 
 
 def like_hashtags():
@@ -46,6 +46,7 @@ def like_and_follow():
     while(True):
         for user in topLiker_file.list[0:100]:
             while( bot.reached_limit('follows')):
+                bot.console_print('follow is sleeping, limit reached ')
                 time.sleep(60)
             user_id= user.strip()
             if not bot.follow_with_time(user_id):
@@ -61,8 +62,8 @@ def collect_topLiker():
     while(True):
         for hashtag in random_hashtag_file.list:
             hastagusers = bot.get_hashtag_users(hashtag.strip())
-            for user in hastagusers[0:10]:
-                topLikers = bot.get_top_Likers(user)
+            if(hastagusers != None):
+                topLikers = bot.get_top_Likers(hastagusers[0:10])
                 bot.topLiker_lock.acquire()
                 try:
                     topLiker_file.append_list(topLikers)
@@ -71,7 +72,7 @@ def collect_topLiker():
                 while len(topLiker_file.list) > 1000:
                     bot.console_print("collect_topLiker is sleeping", 'yellow')
                     time.sleep(60*15) # 15 min
-                    
+        #time.sleep(60) 
                 
 
 def like_followers_from_random_user_file():
@@ -91,6 +92,7 @@ def unfollow_non_followers():
         bot.unfollow_non_followers_24(n_to_unfollows=config.NUMBER_OF_NON_FOLLOWERS_TO_UNFOLLOW)
         while(bot.reached_limit('unfollows')):
             time.sleep(60)
+            bot.console_print('unfollow is sleeping, limit reached ')
 
 
 def follow_users_from_hastag_file():
@@ -113,7 +115,6 @@ def pictures_job():
             
         
 def upload_pictures():  # Automatically post a pic in 'pics' folder
-    photo_captions_file = utils.file(config.PHOTO_CAPTIONS_FILE)
     posted_pic_list = utils.file(config.POSTED_PICS_FILE).list
     pics = sorted([os.path.basename(x) for x in
                glob(config.PICS_PATH + "/*.jpg")])
@@ -122,10 +123,16 @@ def upload_pictures():  # Automatically post a pic in 'pics' folder
         for pic in pics:
             if pic in posted_pic_list:
                 continue
-
-            caption = photo_captions_file.random()
-            full_caption = caption + "\n" + config.FOLLOW_MESSAGE
-            bot.logger.info("Uploading pic with caption: " + caption)
+            
+            cap_file = pic.replace(".jpg", ".txt")            
+            if(os.path.exists(cap_file) != True):
+                bot.logger.error("caption file not found" + cap_file)
+                return
+            full_caption = open(cap_file).read() 
+            #caption = photo_captions_file.random()
+            #full_caption = caption + "\n" + config.FOLLOW_MESSAGE
+            
+            bot.logger.info("Uploading pic with caption: " + full_caption)
             bot.upload_photo(config.PICS_PATH + pic, caption=full_caption)
             if bot.api.last_response.status_code != 200:
                 bot.logger.error("Something went wrong, read the following ->\n")
@@ -174,9 +181,9 @@ pics_thread = threading.Thread(name='pictures', target=pictures_job)
 
 like_follow_thread.start()
 unfollow_thread.start()
-#like_hashtags_thread.start()
 stats_thread.start()
-
+topLiker_thread.start()
+pics_thread.start()
 
 #while True:
 #    schedule.run_pending()

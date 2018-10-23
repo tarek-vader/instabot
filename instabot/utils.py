@@ -49,8 +49,6 @@ class file(object):
         items = self.list
         if x in items:
             items.remove(x)
-            msg = "Removing '{}' from `{}`.".format(x, self.fname)
-            print(bold(green(msg)))
             self.save_list(items)
         else:
             msg = "while removing not found '{}' .".format(x)
@@ -76,5 +74,10 @@ class file(object):
 
     def save_list(self, items):
         with open(self.fname, 'w') as f:
+            for item in items:
+                f.write('{item}\n'.format(item=item))
+                
+    def append_list(self, items):
+        with open(self.fname, 'a') as f:
             for item in items:
                 f.write('{item}\n'.format(item=item))

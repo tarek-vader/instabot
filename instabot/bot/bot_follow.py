@@ -7,10 +7,8 @@ import time
 
 def follow_with_time(self, user_id):
     user_id = self.convert_to_user_id(user_id)
-    msg = ' ===> Going to follow `user_id`: {}.'.format(user_id)
-    self.console_print(msg)
     if not self.check_user(user_id):
-        return True
+        return False
     if not self.reached_limit('follows'):
         self.delay('follow')
         if self.api.follow(user_id):

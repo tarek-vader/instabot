@@ -23,6 +23,7 @@ POSTED_PICS_FILE = "pics.txt"
 # The file containing all the photos already posted from the PICS_PATH directory
 
 PICS_PATH = "/home/pi/Pictures/"
+#PICS_PATH = r"C:\Users\TQuronfuleh\git\instagrambot\examples\ultimate_schedule\\"
 # The path of the directory containing the photos the bot will upload
 # NOTE: Being a directory, it must end with '/'
 
