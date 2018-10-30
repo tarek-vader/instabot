@@ -50,7 +50,7 @@ def like_and_follow():
                 time.sleep(60)
             user_id= user.strip()
             if not bot.follow_with_time(user_id):
-                bot.like_user(user_id, amount=2, filtration=False)
+                bot.like_user(user_id, amount=1, filtration=False)
             bot.topLiker_lock.acquire()
             try:
                 topLiker_file.remove(user_id)
@@ -61,6 +61,9 @@ def like_and_follow():
 def collect_topLiker():
     while(True):
         for hashtag in random_hashtag_file.list:
+            while len(topLiker_file.list) > 1000:
+                bot.console_print("collect_topLiker is sleeping", 'yellow')
+                time.sleep(60*15) # 15 min
             hastagusers = bot.get_hashtag_users(hashtag.strip())
             if(hastagusers != None):
                 topLikers = bot.get_top_Likers(hastagusers[0:10])
@@ -69,9 +72,6 @@ def collect_topLiker():
                     topLiker_file.append_list(topLikers)
                 finally:
                     bot.topLiker_lock.release()
-                while len(topLiker_file.list) > 1000:
-                    bot.console_print("collect_topLiker is sleeping", 'yellow')
-                    time.sleep(60*15) # 15 min
         #time.sleep(60) 
                 
 
@@ -124,9 +124,9 @@ def upload_pictures():  # Automatically post a pic in 'pics' folder
             if pic in posted_pic_list:
                 continue
             
-            cap_file = pic.replace(".jpg", ".txt")            
+            cap_file = config.PICS_PATH + pic.replace(".jpg", ".txt")            
             if(os.path.exists(cap_file) != True):
-                bot.logger.error("caption file not found" + cap_file)
+                bot.logger.error("caption file not found " + cap_file)
                 return
             full_caption = open(cap_file).read() 
             #caption = photo_captions_file.random()
