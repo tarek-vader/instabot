@@ -109,7 +109,7 @@ def pictures_job():
         upload_pictures()
         i=6
         while(i>=0):
-            bot.console_print("uploading pictures will begin in" +str(i) +" hours", 'yellow')
+            bot.console_print("uploading pictures will begin in " +str(i) +" hours", 'yellow')
             time.sleep(60*60)  # one hour
             i=i-1
             
@@ -146,10 +146,6 @@ def upload_pictures():  # Automatically post a pic in 'pics' folder
                 with open('pics.txt', 'a') as f:
                     f.write(pic + "\n")
                 bot.logger.info("Succesfully uploaded: " + pic)
-                bot.logger.info("Commenting uploaded photo with hashtags...")
-                medias = bot.get_your_medias()
-                last_photo = medias[0]  # Get the last photo posted
-                bot.comment(last_photo, config.PICS_HASHTAGS)
                 break
     except Exception as e:
         bot.logger.error("Couldn't upload pic")

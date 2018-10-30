@@ -32,9 +32,9 @@ def unfollow_non_followers_24(self, n_to_unfollows=None):
         self.console_print(" ===> Start unfollowing non-followers 24 <===", 'red')
         user = old_followed_user[0]
         user_date = old_followed_user[1]
-        self.unfollow(user)
         self.follow_lock.acquire()
         try:
+            self.unfollow(user)
             self.followed_file.remove(user+";"+user_date)
         finally:
             self.follow_lock.release()

@@ -11,18 +11,20 @@ def follow_with_time(self, user_id):
         return False
     if not self.reached_limit('follows'):
         self.delay('follow')
-        if self.api.follow(user_id):
-            msg = '===> FOLLOWED <==== `user_id`: {}.'.format(user_id)
-            self.console_print(msg, 'green')
-            self.total['follows'] += 1
-            self.follow_lock.acquire()
-            try:
+        self.follow_lock.acquire()
+        followed = False
+        try:
+            if self.api.follow(user_id):
+                msg = '===> FOLLOWED <==== `user_id`: {}.'.format(user_id)
+                self.console_print(msg, 'green')
+                self.total['follows'] += 1
                 self.followed_file.append(user_id + ";" + datetime.datetime.now().ctime())
-            finally:
-                self.follow_lock.release()
-            if user_id not in self._following:
-                self._following.append(user_id)
-            return True
+                followed = True
+        finally:
+            self.follow_lock.release()
+        if user_id not in self._following:
+            self._following.append(user_id)
+        return followed
     else:
         self.logger.info("Out of follows for today.")
     return False
