@@ -190,10 +190,10 @@ stats_thread = threading.Thread(name='stats', target=stats)
 pics_thread = threading.Thread(name='pictures', target=pictures_job)
 
 
-#like_follow_thread.start()
-#unfollow_thread.start()
-#stats_thread.start()
-#pics_thread.start()
+like_follow_thread.start()
+unfollow_thread.start()
+stats_thread.start()
+pics_thread.start()
 topLiker_thread.start()
 
 #while True:
