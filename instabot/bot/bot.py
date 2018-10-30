@@ -142,7 +142,7 @@ class Bot(object):
 
         # limits - block
         self.max_following_to_block = max_following_to_block
-
+        self.last_collected_hashtag = ""
         # current following and followers
         self._following = None
         self._followers = None
@@ -243,7 +243,7 @@ class Bot(object):
     def prepare(self):
         storage = load_checkpoint(self)
         if storage is not None:
-            self.total, self.api.total_requests, self.start_time = storage
+            self.total, self.api.total_requests, self.start_time, self.last_collected_hashtag = storage
 
     def print_counters(self):
         for key, val in self.total.items():

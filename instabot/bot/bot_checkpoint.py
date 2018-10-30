@@ -25,6 +25,7 @@ class Checkpoint(object):
         self.start_time = bot.start_time
         self.date = datetime.now()
         self.total_requests = bot.api.total_requests
+        self.last_collected_hashtag = bot.last_collected_hashtag
 
     def fill_following(self, bot):
         self._following = [item["pk"] for item in bot.api.get_total_self_followings()]
@@ -33,10 +34,11 @@ class Checkpoint(object):
         self._followers = [item["pk"] for item in bot.api.get_total_self_followers()]
 
     def dump(self):
-        return (self.total, self.total_requests, self.start_time)
+        return (self.total, self.total_requests, self.start_time, self.last_collected_hashtag)
 
 
 def save_checkpoint(self):
+    self.console_print('save_checkpoint ')
     checkpoint = Checkpoint(self)
     fname = CHECKPOINT_PATH.format(fname=self.api.username)
     with open(fname, 'wb') as f:
@@ -45,6 +47,7 @@ def save_checkpoint(self):
 
 
 def load_checkpoint(self):
+    self.console_print('load_checkpoint ')
     try:
         fname = CHECKPOINT_PATH.format(fname=self.api.username)
         with open(fname, 'rb') as f:

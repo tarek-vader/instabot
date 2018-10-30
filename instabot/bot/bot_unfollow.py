@@ -8,8 +8,8 @@ def unfollow(self, user_id):
     #username = user_info["username"]
     self.console_print('===> Going to unfollow `user_id`: {} '.format(user_id))
 
-    if self.check_user(user_id, unfollowing=True):
-        return True  # whitelisted user
+#     if self.check_user(user_id, unfollowing=True):
+#         return True  # whitelisted user
     if not self.reached_limit('unfollows'):
         self.delay('unfollow')
         if self.api.unfollow(user_id):
