@@ -249,6 +249,7 @@ class Bot(object):
         for key, val in self.total.items():
             if val > 0:
                 self.logger.info("Total {}: {}".format(key, val))
+        self.logger.info("last hashtag: {}".format(self.last_collected_hashtag))
         self.logger.info("Total requests: {}".format(self.api.total_requests))
 
     def delay(self, key):
