@@ -6,7 +6,7 @@ def unfollow(self, user_id):
     user_id = self.convert_to_user_id(user_id)
     #user_info = self.get_user_info(user_id)
     #username = user_info["username"]
-    self.console_print('===> Going to unfollow `user_id`: {} '.format(user_id))
+    #self.console_print('===> Going to unfollow `user_id`: {} '.format(user_id))
 
     if self.check_user(user_id, unfollowing=True):
         return True  # whitelisted user
@@ -24,12 +24,24 @@ def unfollow(self, user_id):
         self.logger.info("Out of unfollows for today.")
     return False
 
+def unfollow_non_followers_lost(self):
+    try:
+        users_to_unfollow = set(self.following) - self.friends_file.set
+        
+        contents ="\n".join(self.followed_file.list)
+        for user in users_to_unfollow:
+            if user.strip() not in contents:
+                self.unfollow(user.strip())
+                return
+    except Exception as e:
+         self.logger.error("error while unfollow lost" + str(e))
+
 def unfollow_non_followers_24(self, n_to_unfollows=None):
     #self.logger.info("Unfollowing non-followers 24.")
     old_followed_user = self.followed_file.get_older_24()
     
     if old_followed_user != None :
-        self.console_print(" ===> Start unfollowing non-followers 24 <===", 'red')
+        #self.console_print(" ===> Start unfollowing non-followers 24 <===", 'red')
         user = old_followed_user[0]
         user_date = old_followed_user[1]
         self.follow_lock.acquire()
@@ -38,6 +50,8 @@ def unfollow_non_followers_24(self, n_to_unfollows=None):
             self.followed_file.remove(user+";"+user_date)
         finally:
             self.follow_lock.release()
+    else:
+        self.unfollow_non_followers_lost()
 
 
 def unfollow_users(self, user_ids):

@@ -6,7 +6,7 @@ import random
 import sys
 import threading
 import time
-import get_top_likers
+
 
 sys.path.append(os.path.join(sys.path[0], '../../'))
 import schedule
@@ -32,7 +32,7 @@ bot.follow_lock = threading.Lock()
 def stats():
     while(True):
         bot.save_user_stats(bot.user_id)
-        time.sleep(60*60*3)
+        time.sleep(60*60*24)
 
 
 def like_hashtags():
@@ -48,9 +48,13 @@ def like_and_follow():
             while( bot.reached_limit('follows')):
                 bot.console_print('follow is sleeping, limit reached ')
                 time.sleep(60)
-            user_id= user.strip()
-            if not bot.follow_with_time(user_id):
-                bot.like_user(user_id, amount=1, filtration=False)
+            try:
+                user_id= user.strip()
+                if not bot.follow_with_time(user_id):
+                    bot.like_user(user_id, amount=1, filtration=False)
+            except Exception as e:
+                bot.logger.error("error while follow and like: " + str(e))
+                break
             bot.topLiker_lock.acquire()
             try:
                 topLiker_file.remove(user_id)
@@ -68,12 +72,12 @@ def collect_topLiker():
                 time.sleep(60*15) # 15 min
             if( bot.last_collected_hashtag != ""):
                 if(foundHashtag == False and bot.last_collected_hashtag != hashtag):
-                    bot.console_print("collect topLiker: skipping hashtag: " +str(hashtag), 'yellow')
+                    bot.console_print("collect topLiker: skipping hashtag: " +str(hashtag.encode('utf-8')), 'yellow')
                     continue
                 elif (foundHashtag == False):
                     foundHashtag = True
                     continue
-            bot.console_print("collect_topLiker collect from hashtag: " +str(hashtag.strip()), 'yellow')
+            bot.console_print("collect_topLiker collect from hashtag: " +str(hashtag.strip().encode('utf-8')), 'yellow')
             hastagusers = bot.get_hashtag_users(hashtag.strip())
             if(hastagusers != None):
                 topLikers = bot.get_top_Likers(hastagusers[0:10])
@@ -81,7 +85,7 @@ def collect_topLiker():
                 bot.topLiker_lock.acquire()
                 try:
                     topLiker_file.append_list(topLikers)
-                    clean_list = topLiker_file.set - bot.skipped_file.set- bot.unfollowed_file.set - bot.friends_file.set
+                    clean_list = topLiker_file.set - bot.skipped_file.set- bot.unfollowed_file.set - bot.friends_file.set - bot.blacklist_file.set 
                     topLiker_file.save_list(clean_list)
                 finally:
                     bot.topLiker_lock.release()
@@ -97,14 +101,21 @@ def like_followers_from_random_user_file():
 def follow_followers():
     bot.follow_followers(random_user_file.random().strip(), nfollows=config.NUMBER_OF_FOLLOWERS_TO_FOLLOW)
 
-
+def unfollow_lost():
+    bot.unfollow_non_followers_lost()
+    
 def comment_medias():
     bot.comment_medias(bot.get_timeline_medias())
 
 
+            
+
 def unfollow_non_followers():
     while(True):
-        bot.unfollow_non_followers_24(n_to_unfollows=config.NUMBER_OF_NON_FOLLOWERS_TO_UNFOLLOW)
+        try:
+            bot.unfollow_non_followers_24(n_to_unfollows=config.NUMBER_OF_NON_FOLLOWERS_TO_UNFOLLOW)
+        except Exception as e:
+             bot.logger.error("error while unfollow " + str(e))
         while(bot.reached_limit('unfollows')):
             time.sleep(60)
             bot.console_print('unfollow is sleeping, limit reached ')
@@ -120,9 +131,10 @@ def comment_hashtag():
     bot.comment_hashtag(hashtag)
 
 def pictures_job():
+    time.sleep(60*2)
     while(True):
         upload_pictures()
-        i=6
+        i=1
         while(i>=0):
             bot.console_print("uploading pictures will begin in " +str(i) +" hours", 'yellow')
             time.sleep(60*60)  # one hour
@@ -143,12 +155,12 @@ def upload_pictures():  # Automatically post a pic in 'pics' folder
             if(os.path.exists(cap_file) != True):
                 bot.logger.error("caption file not found " + cap_file)
                 return
-            full_caption = open(cap_file).read() 
+            full_caption = open(cap_file , encoding="utf-8").read() 
             #caption = photo_captions_file.random()
             #full_caption = caption + "\n" + config.FOLLOW_MESSAGE
             
-            bot.logger.info("Uploading pic with caption: " + full_caption)
-            bot.upload_photo(config.PICS_PATH + pic, caption=full_caption)
+            bot.logger.info("Uploading pic with caption: " + str(full_caption.encode('utf-8')))
+            bot.upload_photo(config.PICS_PATH + pic, caption=str(full_caption.encode('utf-8')))
             if bot.api.last_response.status_code != 200:
                 bot.logger.error("Something went wrong, read the following ->\n")
                 bot.logger.error(bot.api.last_response)
@@ -181,7 +193,7 @@ def put_non_followers_on_blacklist():  # put non followers on blacklist
         bot.logger.error("Couldn't update blacklist")
         bot.logger.error(str(e))
 
-
+unfollow_lost_thread = threading.Thread(name='unfollow_lost', target=unfollow_lost)
 like_follow_thread = threading.Thread(name='like_and_follow', target=like_and_follow)
 topLiker_thread =  threading.Thread(name='get_top_liker', target=collect_topLiker)
 unfollow_thread = threading.Thread(name='unfollow_non_followers', target=unfollow_non_followers)
@@ -189,7 +201,7 @@ like_hashtags_thread = threading.Thread(name='like_hashtags', target=like_hashta
 stats_thread = threading.Thread(name='stats', target=stats)
 pics_thread = threading.Thread(name='pictures', target=pictures_job)
 
-
+#unfollow_lost_thread.start()
 like_follow_thread.start()
 unfollow_thread.start()
 stats_thread.start()

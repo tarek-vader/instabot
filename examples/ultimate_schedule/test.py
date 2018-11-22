@@ -8,8 +8,11 @@ sys.path.append(os.path.join(sys.path[0], '../../'))
 import schedule
 from instabot import Bot, utils
 
+bot = Bot()
 
+bot.login()
+bot.logger.info("ULTIMATE script. Safe to run 24/7!")
+time.sleep(5)
+bot.last_collected_hashtag = "xxxx"
 
-myfile = utils.file("hashtag_database.txt")
-myfile.list
-print( myfile.list)
+bot.logout()

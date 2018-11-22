@@ -4,7 +4,7 @@ from collections import OrderedDict
 import datetime
 import codecs
 
-from huepy import bold, green, orange
+from huepy import bold, green, orange, red
 
 
 class file(object):
@@ -52,7 +52,7 @@ class file(object):
             self.save_list(items)
         else:
             msg = "while removing not found '{}' .".format(x)
-            print(bold(red(msg)))
+            print(red(msg))
 
     def get_older_24(self):
         items = self.list
@@ -61,8 +61,8 @@ class file(object):
             userdate= datetime.datetime.strptime(fulldate,"%a %b %d %H:%M:%S %Y")
             diff = (datetime.datetime.now()-userdate).total_seconds()/3600
             if( diff > 24):
-                msg = "found user '{}' followed at `{}`.".format(user_date.split(';')[0], fulldate)
-                print(bold(green(msg)))
+                #msg = "found user '{}' followed at `{}`.".format(user_date.split(';')[0], fulldate)
+                #print(bold(green(msg)))
                 return user_date.split(';')[0], user_date.split(';')[1]
         return None
 

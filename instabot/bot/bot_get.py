@@ -164,9 +164,8 @@ def get_top_Likers(self, usersList):
             while(numberOfLikes > 5):
                 for liker in topLikerDic.keys():
                     if(topLikerDic[liker] >= numberOfLikes):
-                        completeLiker = liker + ":" + str(topLikerDic[liker])  # liker:numberofLikes
-                        if(completeLiker not in topLikers):
-                            topLikers.append(completeLiker)
+                        if(liker not in topLikers):
+                            topLikers.append(liker)
                 numberOfLikes = numberOfLikes - 1
             time2Sleep = random.randint(60, 80)
             time.sleep(time2Sleep)
