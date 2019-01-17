@@ -42,16 +42,40 @@ def like_hashtags():
 def like_timeline():
     bot.like_timeline(amount=300 // 24)
 
+def only_like():
+    while(True):
+        for user in topLiker_file.list[150:250]:
+            while( bot.reached_limit('likes')):
+                bot.console_print('likes is sleeping, limit reached ')
+                time.sleep(60)
+            try:
+                user_id= user.strip()
+                print (user_id)
+                bot.like_user(user_id, amount=1, filtration=False)
+                time.sleep(3)
+            except Exception as e:
+                bot.logger.error("error while like: " + str(e))
+                break
+            bot.topLiker_lock.acquire()
+            try:
+                topLiker_file.remove(user_id)
+            finally:
+                bot.topLiker_lock.release()
+        time.sleep(60)
+
 def like_and_follow():
     while(True):
         for user in topLiker_file.list[0:100]:
-            while( bot.reached_limit('follows')):
+            while( bot.reached_limit('likes') and bot.reached_limit('follows')):
                 bot.console_print('follow is sleeping, limit reached ')
                 time.sleep(60)
             try:
                 user_id= user.strip()
-                if not bot.follow_with_time(user_id):
-                    bot.like_user(user_id, amount=1, filtration=False)
+                just_followed= False
+                if not bot.reached_limit('follows'):
+                    just_followed = bot.follow_with_time(user_id)
+                #if not bot.reached_limit('likes'):
+                #    bot.like_user(user_id, amount=2, filtration=True)
             except Exception as e:
                 bot.logger.error("error while follow and like: " + str(e))
                 break
@@ -67,7 +91,7 @@ def collect_topLiker():
     while(True):
         random_hashtag_file = utils.file(config.HASHTAGS_FILE)
         for hashtag in random_hashtag_file.list:
-            while len(topLiker_file.list) > 1000:
+            while len(topLiker_file.list) > 2400:
                 bot.console_print("collect_topLiker is sleeping, current topliker: " + str(len(topLiker_file.list)), 'yellow')
                 time.sleep(60*15) # 15 min
             if( bot.last_collected_hashtag != ""):
@@ -131,7 +155,8 @@ def comment_hashtag():
     bot.comment_hashtag(hashtag)
 
 def pictures_job():
-    time.sleep(60*2)
+    #time.sleep(60*2)
+    time.sleep(2)
     while(True):
         upload_pictures()
         i=1
@@ -159,8 +184,8 @@ def upload_pictures():  # Automatically post a pic in 'pics' folder
             #caption = photo_captions_file.random()
             #full_caption = caption + "\n" + config.FOLLOW_MESSAGE
             
-            bot.logger.info("Uploading pic with caption: " + str(full_caption.encode('utf-8')))
-            bot.upload_photo(config.PICS_PATH + pic, caption=str(full_caption.encode('utf-8')))
+            bot.logger.info("Uploading pic with caption: " + str(full_caption))
+            bot.upload_photo(config.PICS_PATH + pic, caption=str(full_caption))
             if bot.api.last_response.status_code != 200:
                 bot.logger.error("Something went wrong, read the following ->\n")
                 bot.logger.error(bot.api.last_response)
@@ -195,6 +220,7 @@ def put_non_followers_on_blacklist():  # put non followers on blacklist
 
 unfollow_lost_thread = threading.Thread(name='unfollow_lost', target=unfollow_lost)
 like_follow_thread = threading.Thread(name='like_and_follow', target=like_and_follow)
+only_like_thread = threading.Thread(name='only_like', target=only_like)
 topLiker_thread =  threading.Thread(name='get_top_liker', target=collect_topLiker)
 unfollow_thread = threading.Thread(name='unfollow_non_followers', target=unfollow_non_followers)
 like_hashtags_thread = threading.Thread(name='like_hashtags', target=like_hashtags)
@@ -203,9 +229,10 @@ pics_thread = threading.Thread(name='pictures', target=pictures_job)
 
 #unfollow_lost_thread.start()
 like_follow_thread.start()
+only_like_thread.start()
 unfollow_thread.start()
 stats_thread.start()
-pics_thread.start()
+#pics_thread.start()
 topLiker_thread.start()
 
 #while True:

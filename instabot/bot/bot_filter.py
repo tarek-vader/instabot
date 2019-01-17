@@ -136,11 +136,11 @@ def check_user(self, user_id, filter_closed_acc=False, unfollowing=False):
         if user_info["is_private"]:
             self.console_print('info: account is PRIVATE, skipping! ', 'red')
             return False
-    if "is_business" in user_info and self.filter_business_accounts:
-        if user_info["is_business"]:
-            self.console_print('info: is BUSINESS, skipping!', 'red')
-            skipped.append(user_id)
-            return False
+#    if "is_business" in user_info and self.filter_business_accounts:
+#        if user_info["is_business"]:
+#            self.console_print('info: is BUSINESS, skipping!', 'red')
+#            skipped.append(user_id)
+#            return False
     if "is_verified" in user_info and self.filter_verified_accounts:
         if user_info["is_verified"]:
             self.console_print('info: is VERIFIED, skipping !', 'red')

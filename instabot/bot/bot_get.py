@@ -161,7 +161,7 @@ def get_top_Likers(self, usersList):
                 time.sleep(time2Sleep)
             topLikerDic = {liker: likersUserName.count(liker) for liker in likersUserName} # {liker, numberofLikes}
             numberOfLikes = numberOfMedia # from 10 to 1
-            while(numberOfLikes > 5):
+            while(numberOfLikes > 2):## 3 of 10pics 30% likes
                 for liker in topLikerDic.keys():
                     if(topLikerDic[liker] >= numberOfLikes):
                         if(liker not in topLikers):
